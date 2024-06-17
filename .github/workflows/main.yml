@@ -15,59 +15,33 @@ jobs:
         with:
           fetch-depth: 0  # Fetch all history for all branches
 
-      - name: Debug - Checkout completed
-        run: echo "Repository checked out successfully."
-
       - name: Fetch main branch
-        run: |
-          echo "Fetching main branch..."
-          git fetch origin main
-          echo "Fetch completed."
+        run: git fetch origin main
 
-      - name: Get list of changed files
-        id: changes
-        run: |
-          echo "Getting list of changed files..."
-          git remote set-url origin $(git remote get-url origin)
-          git fetch origin main --depth=1  # Ensure we fetch the latest main branch
-          MAIN_BRANCH="origin/main"
-
-          if [ $(git rev-list --count HEAD) -eq 1 ]; then
-            echo "Initial commit detected. Listing all files..."
-            git ls-files > changes.txt
-            awk '{print "A\t" $0}' changes.txt > temp && mv temp changes.txt
-          else
-            echo "Subsequent commit detected. Diffing against main branch..."
-            git diff --name-status $MAIN_BRANCH > changes.txt
-          fi
-
-          echo "Changed files list generated."
-          cat changes.txt  # Output the list for debugging
+      - name: Identify changed files
+        id: changed_files
+        uses: tj-actions/changed-files@v9
+        with:
+          base: origin/main  # Specify the base branch to compare against
 
       - name: Debug - Changed files list
         run: |
           echo "List of changed files:"
-          cat changes.txt
+          echo "${{ steps.changed_files.outputs.files }}"
 
       - name: Process changed files
         id: process_changes
         run: |
           echo "Processing changed files..."
-          while IFS= read -r line; do
-            OPERATION=$(echo $line | awk '{print $1}')
-            FILE_PATH=$(echo $line | awk '{print $2}')
-            URL="https://github.com/${{ github.repository }}/blob/main/$FILE_PATH"
-            case $OPERATION in
-              A) TYPE="new file added";;
-              D) TYPE="deleted";;
-              M) TYPE="updated";;
-            esac
-            echo "File: $FILE_PATH"
-            echo "Operation: $TYPE"
-            echo "URL: $URL"
-            RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","index":"Langchaintest","operation":"'"$TYPE"'"}' https://yourapi.example.com/endpoint)
+          for file_path in ${{ steps.changed_files.outputs.files }}; do
+            echo "Processing $file_path..."
+            # Add your processing logic here (e.g., notify, test, deploy)
+            # Example: Notify or perform actions based on each file_path
+            URL="https://github.com/${{ github.repository }}/blob/main/$file_path"
+            TYPE=$(git log -1 --pretty=format:"%h %s" -- $file_path)
+            RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","commit":"'"$TYPE"'"}' https://yourapi.example.com/endpoint)
             echo "API Response: $RESPONSE"
-          done < changes.txt
+          done
 
       - name: Debug - Processing completed
         run: echo "File processing completed."
