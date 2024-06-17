@@ -1,4 +1,4 @@
-name: Vectorize the file
+name: Push to main branch
 
 on:
   push:
@@ -13,15 +13,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Debug - Checkout completed
+        run: echo "Repository checked out successfully."
+
       - name: Get list of changed files
         id: changes
         run: |
           git fetch origin main
           git diff --name-status origin/main HEAD > changes.txt
 
+      - name: Debug - Changed files list
+        run: |
+          echo "List of changed files:"
+          cat changes.txt
+
       - name: Process changed files
         id: process_changes
         run: |
+          echo "Processing changed files..."
           while IFS= read -r line; do
             OPERATION=$(echo $line | awk '{print $1}')
             FILE_PATH=$(echo $line | awk '{print $2}')
@@ -31,12 +40,18 @@ jobs:
               D) TYPE="deleted";;
               M) TYPE="updated";;
             esac
-            echo "$FILE_PATH ($TYPE) -> $URL"
+            echo "File: $FILE_PATH"
+            echo "Operation: $TYPE"
+            echo "URL: $URL"
             echo "::set-output name=file::$FILE_PATH"
             echo "::set-output name=operation::$TYPE"
             echo "::set-output name=url::$URL"
-            curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","index_name":"Langchaintest","operation":"'"$TYPE"'"}' https://rag-api.cfapps.eu10-004.hana.ondemand.com/embedding_web_page/
+            RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","index":"Langchaintest","operation":"'"$TYPE"'"}' https://yourapi.example.com/endpoint)
+            echo "API Response: $RESPONSE"
           done < changes.txt
 
+      - name: Debug - Processing completed
+        run: echo "File processing completed."
+        
       - name: Post results
-        run: echo "Files processed"
+        run: echo "Files processed successfully."
