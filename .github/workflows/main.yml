@@ -16,17 +16,26 @@ jobs:
       - name: Debug - Checkout completed
         run: echo "Repository checked out successfully."
 
-      - name: Fetch latest commits
+      - name: Fetch all branches
         run: |
-          echo "Fetching latest commits..."
-          git fetch origin main
+          echo "Fetching all branches..."
+          git fetch --all
           echo "Fetch completed."
 
       - name: Get list of changed files
         id: changes
         run: |
           echo "Getting list of changed files..."
-          git diff --name-status HEAD^ HEAD > changes.txt
+          if [ $(git rev-parse --is-shallow-repository) = "true" ]; then
+            git fetch --unshallow
+          fi
+          if [ $(git rev-list --count HEAD) -eq 1 ]; then
+            echo "Initial commit detected. Listing all files..."
+            git ls-files > changes.txt
+            awk '{print "A\t" $0}' changes.txt > temp && mv temp changes.txt
+          else
+            git diff --name-status origin/main > changes.txt
+          fi
           echo "Changed files list generated."
 
       - name: Debug - Changed files list
@@ -59,6 +68,6 @@ jobs:
 
       - name: Debug - Processing completed
         run: echo "File processing completed."
-        
+
       - name: Post results
         run: echo "Files processed successfully."
