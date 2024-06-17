@@ -35,13 +35,12 @@ jobs:
       - name: Debug - Display detected changes
         run: |
           echo "Detected changes:"
-          echo "${{ steps.file_changes.outputs.changes }}"
           echo "${{ steps.file_changes.outputs.changed_files }}"
 
       - name: Process changed files
         run: |
           echo "Processing changed files..."
-          changes=$(echo "${{ steps.file_changes.outputs.changes }}")
+          changes=$(echo "${{ steps.file_changes.changed_files }}")
 
           if [ -z "$changes" ]; then
             echo "No changes detected."
