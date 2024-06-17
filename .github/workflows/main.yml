@@ -1,0 +1,42 @@
+name: Vectorize the file
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  process_files:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Get list of changed files
+        id: changes
+        run: |
+          git fetch origin main
+          git diff --name-status origin/main HEAD > changes.txt
+
+      - name: Process changed files
+        id: process_changes
+        run: |
+          while IFS= read -r line; do
+            OPERATION=$(echo $line | awk '{print $1}')
+            FILE_PATH=$(echo $line | awk '{print $2}')
+            URL="https://github.com/${{ github.repository }}/blob/main/$FILE_PATH"
+            case $OPERATION in
+              A) TYPE="new file added";;
+              D) TYPE="deleted";;
+              M) TYPE="updated";;
+            esac
+            echo "$FILE_PATH ($TYPE) -> $URL"
+            echo "::set-output name=file::$FILE_PATH"
+            echo "::set-output name=operation::$TYPE"
+            echo "::set-output name=url::$URL"
+            curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","index_name":"Langchaintest","operation":"'"$TYPE"'"}' https://rag-api.cfapps.eu10-004.hana.ondemand.com/embedding_web_page/
+          done < changes.txt
+
+      - name: Post results
+        run: echo "Files processed"
