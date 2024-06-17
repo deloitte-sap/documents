@@ -16,7 +16,7 @@ jobs:
           fetch-depth: 0  # Fetch all history for all branches
 
       - name: Get current git ref
-        run: echo "Current branch: $(git branch --show-current)"
+        run: echo "Current branch: $(git branch)"
 
       - name: Ensure main branch is fetched from origin
         run: git fetch origin main
