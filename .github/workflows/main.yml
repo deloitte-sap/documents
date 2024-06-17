@@ -1,4 +1,4 @@
-name: Push to main branch
+name: Process Changed Files
 
 on:
   push:
@@ -19,32 +19,56 @@ jobs:
         run: git fetch origin main
 
       - name: Identify changed files
-        id: changed_files
-        uses: tj-actions/changed-files@v9
+        id: filter_changes
+        uses: dorny/paths-filter@v2
         with:
-          base: origin/main  # Specify the base branch to compare against
+          filters: |
+            added:
+              type: added
+              paths: '**'
+            modified:
+              type: modified
+              paths: '**'
+            deleted:
+              type: deleted
+              paths: '**'
 
-      - name: Debug - Changed files list
+      - name: Process added files
+        if: steps.filter_changes.outputs.added != ''
         run: |
-          echo "List of changed files:"
-          echo "${{ steps.changed_files.outputs.files }}"
-
-      - name: Process changed files
-        id: process_changes
-        run: |
-          echo "Processing changed files..."
-          for file_path in ${{ steps.changed_files.outputs.files }}; do
-            echo "Processing $file_path..."
-            # Add your processing logic here (e.g., notify, test, deploy)
-            # Example: Notify or perform actions based on each file_path
-            URL="https://github.com/${{ github.repository }}/blob/main/$file_path"
-            TYPE=$(git log -1 --pretty=format:"%h %s" -- $file_path)
-            RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","commit":"'"$TYPE"'"}' https://yourapi.example.com/endpoint)
-            echo "API Response: $RESPONSE"
+          echo "Processing added files..."
+          for file in ${{ steps.filter_changes.outputs.added }}; do
+            URL="https://github.com/${{ github.repository }}/blob/main/$file"
+            echo "File: $file"
+            echo "Operation: added"
+            echo "URL: $URL"
+            # Replace this with your API call to process each file
+            # RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"added"}' https://yourapi.example.com/endpoint)
+            # echo "API Response: $RESPONSE"
           done
 
-      - name: Debug - Processing completed
-        run: echo "File processing completed."
+      - name: Process modified files
+        if: steps.filter_changes.outputs.modified != ''
+        run: |
+          echo "Processing modified files..."
+          for file in ${{ steps.filter_changes.outputs.modified }}; do
+            URL="https://github.com/${{ github.repository }}/blob/main/$file"
+            echo "File: $file"
+            echo "Operation: modified"
+            echo "URL: $URL"
+            # Replace this with your API call to process each file
+            # RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"modified"}' https://yourapi.example.com/endpoint)
+            # echo "API Response: $RESPONSE"
+          done
 
-      - name: Post results
-        run: echo "Files processed successfully."
+      - name: Process deleted files
+        if: steps.filter_changes.outputs.deleted != ''
+        run: |
+          echo "Processing deleted files..."
+          for file in ${{ steps.filter_changes.outputs.deleted }}; do
+            URL="https://github.com/${{ github.repository }}/blob/main/$file"
+            echo "File: $file"
+            echo "Operation: deleted"
+            echo "URL: $URL"
+            # Replace this with your API call to process each file
+            # RESPONSE=$(curl -X POST -H "Content-
