@@ -20,20 +20,23 @@ jobs:
 
       - name: Detect file changes
         id: file_changes
-        uses: dorny/paths-filter@v2
+        uses: dorny/paths-filter@v3
         with:
+          # Enable listing of files matching each filter.
+          # Paths to files will be available in `${FILTER_NAME}_files` output variable.
+          # Paths will be formatted as JSON array
+          list-files: json
+      
+          # In this example all changed files are passed to the following action to do
+          # some custom processing.
           filters: |
-            addedOrModified:
-              - added|modified: '**'
-            deleted:
-              - deleted|modified: '**'
-
+            changed:
+              - '**'
       - name: Debug - Display detected changes
         run: |
           echo "Detected changes:"
           echo "${{ steps.file_changes.outputs.changes }}"
           echo "${{ steps.file_changes.outputs.changed_files }}"
-          echo "${{ steps.file_changes.outputs }}"
 
       - name: Process changed files
         run: |
