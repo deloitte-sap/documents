@@ -12,36 +12,37 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Fetch all history for all branches
 
       - name: Debug - Checkout completed
         run: echo "Repository checked out successfully."
 
-      - name: Fetch all branches
+      - name: Fetch main branch
         run: |
-          echo "Fetching all branches..."
-          git fetch --all
+          echo "Fetching main branch..."
+          git fetch origin main
           echo "Fetch completed."
-
-      - name: Ensure full history is fetched
-        run: |
-          echo "Ensuring full history is fetched..."
-          if [ $(git rev-parse --is-shallow-repository) = "true" ]; then
-            git fetch --unshallow
-          fi
-          echo "Full history fetched."
 
       - name: Get list of changed files
         id: changes
         run: |
           echo "Getting list of changed files..."
+          git remote set-url origin $(git remote get-url origin)
+          git fetch origin main --depth=1  # Ensure we fetch the latest main branch
+          MAIN_BRANCH="origin/main"
+
           if [ $(git rev-list --count HEAD) -eq 1 ]; then
             echo "Initial commit detected. Listing all files..."
             git ls-files > changes.txt
             awk '{print "A\t" $0}' changes.txt > temp && mv temp changes.txt
           else
-            git diff --name-status origin/main..HEAD > changes.txt
+            echo "Subsequent commit detected. Diffing against main branch..."
+            git diff --name-status $MAIN_BRANCH > changes.txt
           fi
+
           echo "Changed files list generated."
+          cat changes.txt  # Output the list for debugging
 
       - name: Debug - Changed files list
         run: |
@@ -64,9 +65,6 @@ jobs:
             echo "File: $FILE_PATH"
             echo "Operation: $TYPE"
             echo "URL: $URL"
-            echo "::set-output name=file::$FILE_PATH"
-            echo "::set-output name=operation::$TYPE"
-            echo "::set-output name=url::$URL"
             RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","index":"Langchaintest","operation":"'"$TYPE"'"}' https://yourapi.example.com/endpoint)
             echo "API Response: $RESPONSE"
           done < changes.txt
