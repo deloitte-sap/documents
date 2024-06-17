@@ -16,11 +16,19 @@ jobs:
       - name: Debug - Checkout completed
         run: echo "Repository checked out successfully."
 
-      - name: Fetch main branch
+      - name: Fetch all branches
         run: |
-          echo "Fetching main branch..."
-          git fetch origin main:main
+          echo "Fetching all branches..."
+          git fetch --all
           echo "Fetch completed."
+
+      - name: Ensure full history is fetched
+        run: |
+          echo "Ensuring full history is fetched..."
+          if [ $(git rev-parse --is-shallow-repository) = "true" ]; then
+            git fetch --unshallow
+          fi
+          echo "Full history fetched."
 
       - name: Get list of changed files
         id: changes
@@ -31,7 +39,7 @@ jobs:
             git ls-files > changes.txt
             awk '{print "A\t" $0}' changes.txt > temp && mv temp changes.txt
           else
-            git diff --name-status origin/main > changes.txt
+            git diff --name-status origin/main..HEAD > changes.txt
           fi
           echo "Changed files list generated."
 
