@@ -23,20 +23,17 @@ jobs:
         uses: dorny/paths-filter@v2
         with:
           filters: |
-            added:
-              type: added
-              paths: '**'
-            modified:
-              type: modified
-              paths: '**'
+            addedOrModified:
+              - added|modified: '**'
             deleted:
-              type: deleted
-              paths: '**'
+              - deleted|modified: '**'
 
       - name: Debug - Display detected changes
         run: |
           echo "Detected changes:"
           echo "${{ steps.file_changes.outputs.changes }}"
+          echo "${{ steps.file_changes.outputs.changed_files }}"
+          echo "${{ steps.file_changes.outputs }}"
 
       - name: Process changed files
         run: |
