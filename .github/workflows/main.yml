@@ -15,11 +15,14 @@ jobs:
         with:
           fetch-depth: 0  # Fetch all history for all branches
 
-      - name: Fetch main branch
+      - name: Get current git ref
+        run: echo "Current branch: $(git branch --show-current)"
+
+      - name: Ensure main branch is fetched from origin
         run: git fetch origin main
 
-      - name: Identify changed files
-        id: filter_changes
+      - name: Detect file changes
+        id: file_changes
         uses: dorny/paths-filter@v2
         with:
           filters: |
@@ -33,42 +36,46 @@ jobs:
               type: deleted
               paths: '**'
 
-      - name: Process added files
-        if: steps.filter_changes.outputs.added != ''
+      - name: Debug - Display detected changes
         run: |
-          echo "Processing added files..."
-          for file in ${{ steps.filter_changes.outputs.added }}; do
-            URL="https://github.com/${{ github.repository }}/blob/main/$file"
-            echo "File: $file"
-            echo "Operation: added"
-            echo "URL: $URL"
-            # Replace this with your API call to process each file
-            # RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"added"}' https://yourapi.example.com/endpoint)
-            # echo "API Response: $RESPONSE"
-          done
+          echo "Detected changes:"
+          echo "${{ steps.file_changes.outputs.changes }}"
 
-      - name: Process modified files
-        if: steps.filter_changes.outputs.modified != ''
+      - name: Process changed files
         run: |
-          echo "Processing modified files..."
-          for file in ${{ steps.filter_changes.outputs.modified }}; do
-            URL="https://github.com/${{ github.repository }}/blob/main/$file"
-            echo "File: $file"
-            echo "Operation: modified"
-            echo "URL: $URL"
-            # Replace this with your API call to process each file
-            # RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"modified"}' https://yourapi.example.com/endpoint)
-            # echo "API Response: $RESPONSE"
-          done
+          echo "Processing changed files..."
+          changes=$(echo "${{ steps.file_changes.outputs.changes }}")
 
-      - name: Process deleted files
-        if: steps.filter_changes.outputs.deleted != ''
-        run: |
-          echo "Processing deleted files..."
-          for file in ${{ steps.filter_changes.outputs.deleted }}; do
-            URL="https://github.com/${{ github.repository }}/blob/main/$file"
-            echo "File: $file"
-            echo "Operation: deleted"
-            echo "URL: $URL"
-            # Replace this with your API call to process each file
-            # RESPONSE=$(curl -X POST -H "Content-
+          if [ -z "$changes" ]; then
+            echo "No changes detected."
+          else
+            while IFS= read -r line; do
+              OPERATION=$(echo "$line" | cut -d' ' -f1)
+              FILE_PATH=$(echo "$line" | cut -d' ' -f2-)
+
+              # Determine URL for the file in the repository
+              URL="https://github.com/${{ github.repository }}/blob/main/$FILE_PATH"
+
+              # Determine operation type
+              case $OPERATION in
+                A) TYPE="added";;
+                D) TYPE="deleted";;
+                M) TYPE="modified";;
+                *) TYPE="unknown";;
+              esac
+
+              echo "File: $FILE_PATH"
+              echo "Operation: $TYPE"
+              echo "URL: $URL"
+
+              # Example API call - replace with your actual endpoint
+              # RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"'"$TYPE"'"}' https://yourapi.example.com/endpoint)
+              # echo "API Response: $RESPONSE"
+            done <<< "$changes"
+          fi
+
+      - name: Debug - Processing completed
+        run: echo "File processing completed."
+
+      - name: Post results
+        run: echo "Files processed successfully."
