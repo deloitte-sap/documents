@@ -16,11 +16,18 @@ jobs:
       - name: Debug - Checkout completed
         run: echo "Repository checked out successfully."
 
+      - name: Fetch latest commits
+        run: |
+          echo "Fetching latest commits..."
+          git fetch origin main
+          echo "Fetch completed."
+
       - name: Get list of changed files
         id: changes
         run: |
-          git fetch origin main
-          git diff --name-status origin/main HEAD > changes.txt
+          echo "Getting list of changed files..."
+          git diff --name-status HEAD^ HEAD > changes.txt
+          echo "Changed files list generated."
 
       - name: Debug - Changed files list
         run: |
