@@ -16,19 +16,16 @@ jobs:
       - name: Debug - Checkout completed
         run: echo "Repository checked out successfully."
 
-      - name: Fetch all branches
+      - name: Fetch main branch
         run: |
-          echo "Fetching all branches..."
-          git fetch --all
+          echo "Fetching main branch..."
+          git fetch origin main:main
           echo "Fetch completed."
 
       - name: Get list of changed files
         id: changes
         run: |
           echo "Getting list of changed files..."
-          if [ $(git rev-parse --is-shallow-repository) = "true" ]; then
-            git fetch --unshallow
-          fi
           if [ $(git rev-list --count HEAD) -eq 1 ]; then
             echo "Initial commit detected. Listing all files..."
             git ls-files > changes.txt
