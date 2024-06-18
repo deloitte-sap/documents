@@ -66,15 +66,19 @@ jobs:
           updated_files="${{ steps.file_changes.outputs.updated_files }}"
           removed_files="${{ steps.file_changes.outputs.removed_files }}"
 
-          if [ -n "$inserted_files" ] && [ "$(echo "$inserted_files" | jq '. | length')" -gt 0 ]; then
+          echo "Inserted files JSON: $inserted_files"
+          echo "Updated files JSON: $updated_files"
+          echo "Removed files JSON: $removed_files"
+
+          if [ -n "$inserted_files" ] && [ "$(echo "$inserted_files" | jq length)" -gt 0 ]; then
             process_files "$inserted_files" "added"
           fi
 
-          if [ -n "$updated_files" ] && [ "$(echo "$updated_files" | jq '. | length')" -gt 0 ]; then
+          if [ -n "$updated_files" ] && [ "$(echo "$updated_files" | jq length)" -gt 0 ]; then
             process_files "$updated_files" "modified"
           fi
 
-          if [ -n "$removed_files" ] && [ "$(echo "$removed_files" | jq '. | length')" -gt 0 ]; then
+          if [ -n "$removed_files" ] && [ "$(echo "$removed_files" | jq length)" -gt 0 ]; then
             process_files "$removed_files" "deleted"
           fi
 
