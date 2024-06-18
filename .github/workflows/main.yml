@@ -53,7 +53,9 @@ jobs:
             local files=$1
             local operation=$2
             echo "$files" | sed 's/[][]//g; s/"//g' | tr ',' '\n' | while read -r FILE_PATH; do
+              echo "${FILE_PATH}"
               FILE_PATH="${FILE_PATH#./}" # Remove leading './'
+              echo "${FILE_PATH}"
               URL="https://github.com/${{ github.repository }}/blob/main/$FILE_PATH"
               echo "File: $FILE_PATH"
               echo "Operation: $operation"
