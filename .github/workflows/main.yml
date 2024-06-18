@@ -41,11 +41,16 @@ jobs:
       - name: Debug - Display detected changes
         run: |
           echo "Detected changes:"
-          echo "${{ steps.file_changes.outputs.inserted_files }}"
-          echo "${{ steps.file_changes.outputs.updated_files }}"
-          echo "${{ steps.file_changes.outputs.removed_files }}"
+          echo "Inserted files: ${{ steps.file_changes.outputs.inserted_files }}"
+          echo "Updated files: ${{ steps.file_changes.outputs.updated_files }}"
+          echo "Removed files: ${{ steps.file_changes.outputs.removed_files }}"
 
       - name: Process changed files
+        env:
+          INSERTED_FILES: ${{ steps.file_changes.outputs.inserted_files }}
+          UPDATED_FILES: ${{ steps.file_changes.outputs.updated_files }}
+          REMOVED_FILES: ${{ steps.file_changes.outputs.removed_files }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           echo "Processing changed files..."
 
@@ -55,36 +60,33 @@ jobs:
             echo "$files" | jq -r '.[]' | while IFS= read -r FILE_PATH; do
               FILE_PATH="${FILE_PATH#./}"  # Remove leading './'
               if [[ "$FILE_PATH" != */main.yml && "$FILE_PATH" != "" ]]; then  # Skip any path ending with main.yml and empty paths
-                URL="https://github.com/${{ github.repository }}/blob/main/$FILE_PATH"
+                URL="https://github.com/$GITHUB_REPOSITORY/blob/main/$FILE_PATH"
                 echo "File: \"$FILE_PATH\""
                 echo "Operation: $operation"
                 echo "URL: $URL"
-              RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"'"$operation"'", "index_name": "Langchaintest"}' https://rag-api.cfapps.eu10-004.hana.ondemand.com/embedding_web_page/)
-              echo "API Response: $RESPONSE"
+                # Example API call - replace with your actual endpoint
+                # RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"'"$operation"'"}' https://yourapi.example.com/endpoint)
+                # echo "API Response: $RESPONSE"
+              else
+                echo "Skipping file: \"$FILE_PATH\""
+              fi
             done
           }
 
-          inserted_files="${{ steps.file_changes.outputs.inserted_files }}"
-          updated_files="${{ steps.file_changes.outputs.updated_files }}"
-          removed_files="${{ steps.file_changes.outputs.removed_files }}"
+          echo "Inserted files JSON: \"$INSERTED_FILES\""
+          echo "Updated files JSON: \"$UPDATED_FILES\""
+          echo "Removed files JSON: \"$REMOVED_FILES\""
 
-          echo "Inserted files JSON: $inserted_files"
-          echo "Updated files JSON: $updated_files"
-          echo "Removed files JSON: $removed_files"
-
-          if [ -n "$inserted_files" ] && [ "$inserted_files" != "[]" ]; then
-            echo "Processing newly added file"
-            process_files "$inserted_files" "added"
+          if [ "$INSERTED_FILES" != "[]" ]; then
+            process_files "$INSERTED_FILES" "added"
           fi
 
-          if [ -n "$updated_files" ] && [ "$updated_files" != "[]" ]; then
-            echo "Processing modified file"
-            process_files "$updated_files" "modified"
+          if [ "$UPDATED_FILES" != "[]" ]; then
+            process_files "$UPDATED_FILES" "modified"
           fi
 
-          if [ -n "$removed_files" ] && [ "$removed_files" != "[]" ]; then
-            echo "Processing deleted file"
-            process_files "$removed_files" "deleted"
+          if [ "$REMOVED_FILES" != "[]" ]; then
+            process_files "$REMOVED_FILES" "deleted"
           fi
 
       - name: Debug - Processing completed
