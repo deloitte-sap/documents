@@ -52,7 +52,7 @@ jobs:
           process_files() {
             local files=$1
             local operation=$2
-            echo "$files" | sed 's/[][]//g; s/"//g' | tr ',' '\n' | while IFS= read -r FILE_PATH; do
+            echo "$files" | jq -r '.[]?' | while IFS= read -r FILE_PATH; do
               echo "${FILE_PATH}"
               FILE_PATH="${FILE_PATH#./}" # Remove leading './'
               echo "${FILE_PATH}"
