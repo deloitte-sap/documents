@@ -66,12 +66,16 @@ jobs:
           updated_files="${{ steps.file_changes.outputs.updated_files }}"
           removed_files="${{ steps.file_changes.outputs.removed_files }}"
 
-          if [ -z "$inserted_files" ] && [ -z "$updated_files" ] && [ -z "$removed_files" ]; then
-            echo "No changes detected."
-          else
-            [ -n "$inserted_files" ] && process_files "$inserted_files" "added"
-            [ -n "$updated_files" ] && process_files "$updated_files" "modified"
-            [ -n "$removed_files" ] && process_files "$removed_files" "deleted"
+          if [ "$(echo "$inserted_files" | jq length)" -gt 0 ]; then
+            process_files "$inserted_files" "added"
+          fi
+
+          if [ "$(echo "$updated_files" | jq length)" -gt 0 ]; then
+            process_files "$updated_files" "modified"
+          fi
+
+          if [ "$(echo "$removed_files" | jq length)" -gt 0 ]; then
+            process_files "$removed_files" "deleted"
           fi
 
       - name: Debug - Processing completed
