@@ -48,12 +48,12 @@ jobs:
           echo "Processing changed files..."
 
           get_files() {
-            echo "$1" | sed 's/^\.\///; s/[][]//g' | tr ',' '\n' | sed 's/^ *//; s/ *$//'
+            echo "$1" | sed 's/[][]//g; s/"//g' | tr ',' '\n' | sed 's/^\.//; s/^ *//; s/ *$//'
           }
 
-          inserted_files=$(get_files '${{ steps.file_changes.outputs.inserted_files }}')
-          updated_files=$(get_files '${{ steps.file_changes.outputs.updated_files }}')
-          removed_files=$(get_files '${{ steps.file_changes.outputs.removed_files }}')
+          inserted_files=$(get_files "${{ steps.file_changes.outputs.inserted_files }}")
+          updated_files=$(get_files "${{ steps.file_changes.outputs.updated_files }}")
+          removed_files=$(get_files "${{ steps.file_changes.outputs.removed_files }}")
 
           format_json_array() {
             echo "$1" | jq -R -s -c 'split("\n") | map(select(length > 0))'
@@ -68,6 +68,7 @@ jobs:
             --argjson updated "$updated_json" \
             --argjson removed "$removed_json" \
             '{added: $inserted, modified: $updated, deleted: $removed}')
+
             
           if [ -z "$changes" ]; then
             echo "No changes detected."
