@@ -72,14 +72,17 @@ jobs:
           echo "Removed files JSON: $removed_files"
 
           if [ -n "$inserted_files" ] && [ "$inserted_files" != "[]" ]; then
+            echo "Processing newly added file"
             process_files "$inserted_files" "added"
           fi
 
           if [ -n "$updated_files" ] && [ "$updated_files" != "[]" ]; then
+            echo "Processing modified file"
             process_files "$updated_files" "modified"
           fi
 
           if [ -n "$removed_files" ] && [ "$removed_files" != "[]" ]; then
+            echo "Processing deleted file"
             process_files "$removed_files" "deleted"
           fi
 
