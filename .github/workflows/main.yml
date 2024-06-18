@@ -56,7 +56,7 @@ jobs:
               echo "File: $FILE_PATH"
               echo "Operation: $operation"
               echo "URL: $URL"
-              RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"'"$operation"'", "index": "Langchaintest"}' https://rag-api.cfapps.eu10-004.hana.ondemand.com/embedding_web_page/)
+              RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"'"$operation"'", "index_name": "Langchaintest"}' https://rag-api.cfapps.eu10-004.hana.ondemand.com/embedding_web_page/)
               echo "API Response: $RESPONSE"
             done
           }
