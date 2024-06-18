@@ -40,7 +40,7 @@ jobs:
       - name: Process changed files
         run: |
           echo "Processing changed files..."
-          changes=$(echo "${{ steps.file_changes.changed_files }}")
+          changes=$(echo "${{ steps.file_changes.outputs.changed_files }}")
 
           if [ -z "$changes" ]; then
             echo "No changes detected."
