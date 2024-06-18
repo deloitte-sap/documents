@@ -50,16 +50,15 @@ jobs:
           echo "Processing changed files..."
 
           process_files() {
-            local files=$1
-            local operation=$2
-            echo "$files" | jq -r '.[]?' | while IFS= read -r FILE_PATH; do
-              echo "${FILE_PATH}"
-              FILE_PATH="${FILE_PATH#./}" # Remove leading './'
-              echo "${FILE_PATH}"
-              URL="https://github.com/${{ github.repository }}/blob/main/$FILE_PATH"
-              echo "File: $FILE_PATH"
-              echo "Operation: $operation"
-              echo "URL: $URL"
+            local files="$1"
+            local operation="$2"
+            echo "$files" | jq -r '.[]' | while IFS= read -r FILE_PATH; do
+              FILE_PATH="${FILE_PATH#./}"  # Remove leading './'
+              if [[ "$FILE_PATH" != */main.yml && "$FILE_PATH" != "" ]]; then  # Skip any path ending with main.yml and empty paths
+                URL="https://github.com/${{ github.repository }}/blob/main/$FILE_PATH"
+                echo "File: \"$FILE_PATH\""
+                echo "Operation: $operation"
+                echo "URL: $URL"
               RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"'"$operation"'", "index_name": "Langchaintest"}' https://rag-api.cfapps.eu10-004.hana.ondemand.com/embedding_web_page/)
               echo "API Response: $RESPONSE"
             done
