@@ -31,11 +31,11 @@ jobs:
           # some custom processing.
           filters: |
             inserted:
-              - added:'**'
+              - added: '**'
             updated:
-              - modified:'**'
+              - modified: '**'
             removed:
-              - deleted:'**'
+              - deleted: '**'
       - name: Debug - Display detected changes
         run: |
           echo "Detected changes:"
