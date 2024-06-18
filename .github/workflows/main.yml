@@ -56,9 +56,8 @@ jobs:
               echo "File: $FILE_PATH"
               echo "Operation: $operation"
               echo "URL: $URL"
-              # Example API call - replace with your actual endpoint
-              # RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"'"$operation"'"}' https://yourapi.example.com/endpoint)
-              # echo "API Response: $RESPONSE"
+              RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"'"$operation"'", "index": "Langchaintest"}' https://rag-api.cfapps.eu10-004.hana.ondemand.com/embedding_web_page/)
+              echo "API Response: $RESPONSE"
             done
           }
 
