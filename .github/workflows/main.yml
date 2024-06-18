@@ -50,7 +50,7 @@ jobs:
           process_files() {
             local files=$1
             local operation=$2
-            echo "$files" | jq -r '.[]' | while read -r FILE_PATH; do
+            echo "$files" | sed 's/[][]//g; s/"//g' | tr ',' '\n' | while read -r FILE_PATH; do
               FILE_PATH="${FILE_PATH#./}" # Remove leading './'
               URL="https://github.com/${{ github.repository }}/blob/main/$FILE_PATH"
               echo "File: $FILE_PATH"
@@ -62,9 +62,9 @@ jobs:
             done
           }
 
-          inserted_files=${{ steps.file_changes.outputs.inserted_files }}
-          updated_files=${{ steps.file_changes.outputs.updated_files }}
-          removed_files=${{ steps.file_changes.outputs.removed_files }}
+          inserted_files="${{ steps.file_changes.outputs.inserted_files }}"
+          updated_files="${{ steps.file_changes.outputs.updated_files }}"
+          removed_files="${{ steps.file_changes.outputs.removed_files }}"
 
           if [ -z "$inserted_files" ] && [ -z "$updated_files" ] && [ -z "$removed_files" ]; then
             echo "No changes detected."
