@@ -30,18 +30,18 @@ jobs:
           # In this example all changed files are passed to the following action to do
           # some custom processing.
           filters: |
-            added:
+            inserted:
               - added:'**'
-            modified:
+            updated:
               - modified:'**'
-            deleted:
+            removed:
               - deleted:'**'
       - name: Debug - Display detected changes
         run: |
           echo "Detected changes:"
-          echo "${{ steps.file_changes.outputs.added_files }}"
-          echo "${{ steps.file_changes.outputs.modified_files }}"
-          echo "${{ steps.file_changes.outputs.deleted_files }}"
+          echo "${{ steps.file_changes.outputs.inserted_files }}"
+          echo "${{ steps.file_changes.outputs.updated_files }}"
+          echo "${{ steps.file_changes.outputs.removed_files }}"
 
       - name: Process changed files
         run: |
