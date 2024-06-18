@@ -2,6 +2,8 @@ name: Process Changed Files
 
 on:
   push:
+    paths-ignore:
+      - '**/main.yml'
     branches:
       - main
 
