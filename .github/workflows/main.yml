@@ -46,13 +46,21 @@ jobs:
       - name: Process changed files
         run: |
           echo "Processing changed files..."
-          changes=$(jq -n --arg added "${{ steps.file_changes.outputs.inserted_files }}" \
-                          --arg modified "${{ steps.file_changes.outputs.updated_files }}" \
-                          --arg deleted "${{ steps.file_changes.outputs.removed_files }}" \
-                          '{added: ($added | split("\n") | map(select(. != ""))), 
-                            modified: ($modified | split("\n") | map(select(. != ""))), 
-                            deleted: ($deleted | split("\n") | map(select(. != "")))}')
 
+          get_files() {
+            echo "$1" | jq -r '.[]' | sed 's/^\.\///'
+          }
+
+          inserted_files=$(get_files '${{ steps.file_changes.outputs.inserted_files }}')
+          updated_files=$(get_files '${{ steps.file_changes.outputs.updated_files }}')
+          removed_files=$(get_files '${{ steps.file_changes.outputs.removed_files }}')
+
+          changes=$(jq -n \
+            --argjson inserted_files "$inserted_files" \
+            --argjson updated_files "$updated_files" \
+            --argjson removed_files "$removed_files" \
+            '{added: $inserted_files, modified: $updated_files, deleted: $removed_files}')
+            
           if [ -z "$changes" ]; then
             echo "No changes detected."
           else
