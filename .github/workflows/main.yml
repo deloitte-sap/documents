@@ -47,55 +47,31 @@ jobs:
         run: |
           echo "Processing changed files..."
 
-          get_files() {
-            echo "$1" | sed 's/[][]//g; s/"//g' | tr ',' '\n' | sed 's/^\.//; s/^ *//; s/ *$//'
+          process_files() {
+            local files=$1
+            local operation=$2
+            echo "$files" | jq -r '.[]' | while read -r FILE_PATH; do
+              FILE_PATH="${FILE_PATH#./}" # Remove leading './'
+              URL="https://github.com/${{ github.repository }}/blob/main/$FILE_PATH"
+              echo "File: $FILE_PATH"
+              echo "Operation: $operation"
+              echo "URL: $URL"
+              # Example API call - replace with your actual endpoint
+              # RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"'"$operation"'"}' https://yourapi.example.com/endpoint)
+              # echo "API Response: $RESPONSE"
+            done
           }
 
-          inserted_files=$(get_files "${{ steps.file_changes.outputs.inserted_files }}")
-          updated_files=$(get_files "${{ steps.file_changes.outputs.updated_files }}")
-          removed_files=$(get_files "${{ steps.file_changes.outputs.removed_files }}")
+          inserted_files=${{ steps.file_changes.outputs.inserted_files }}
+          updated_files=${{ steps.file_changes.outputs.updated_files }}
+          removed_files=${{ steps.file_changes.outputs.removed_files }}
 
-          format_json_array() {
-            echo "$1" | jq -R -s -c 'split("\n") | map(select(length > 0))'
-          }
-
-          inserted_json=$(format_json_array "$inserted_files")
-          updated_json=$(format_json_array "$updated_files")
-          removed_json=$(format_json_array "$removed_files")
-
-          changes=$(jq -n \
-            --argjson inserted "$inserted_json" \
-            --argjson updated "$updated_json" \
-            --argjson removed "$removed_json" \
-            '{added: $inserted, modified: $updated, deleted: $removed}')
-
-            
-          if [ -z "$changes" ]; then
+          if [ -z "$inserted_files" ] && [ -z "$updated_files" ] && [ -z "$removed_files" ]; then
             echo "No changes detected."
           else
-            while IFS= read -r line; do
-              OPERATION=$(echo "$line" | cut -d' ' -f1)
-              FILE_PATH=$(echo "$line" | cut -d' ' -f2-)
-
-              # Determine URL for the file in the repository
-              URL="https://github.com/${{ github.repository }}/blob/main/$FILE_PATH"
-
-              # Determine operation type
-              case $OPERATION in
-                A) TYPE="added";;
-                D) TYPE="deleted";;
-                M) TYPE="modified";;
-                *) TYPE="unknown";;
-              esac
-
-              echo "File: $FILE_PATH"
-              echo "Operation: $TYPE"
-              echo "URL: $URL"
-
-              # Example API call - replace with your actual endpoint
-              # RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"'"$TYPE"'"}' https://yourapi.example.com/endpoint)
-              # echo "API Response: $RESPONSE"
-            done <<< "$changes"
+            [ -n "$inserted_files" ] && process_files "$inserted_files" "added"
+            [ -n "$updated_files" ] && process_files "$updated_files" "modified"
+            [ -n "$removed_files" ] && process_files "$removed_files" "deleted"
           fi
 
       - name: Debug - Processing completed
