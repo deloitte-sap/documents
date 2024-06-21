@@ -1,0 +1,102 @@
+[
+    {
+        "question": "What is the Project Name",
+        "answer": "Process Automation CoE"
+    },
+    {
+        "question": "Which Product Group",
+        "answer": "Spend Success Solution SE"
+    },
+    {
+        "question": "Brief Scope of Work",
+        "answer": "SAP IE Business Solution (IE BS) likes to outsource the Application Management services provided for the IT product intelligent Robotic Process Automation (iRPA) and SAP Build in hybrid model (SAP and Deloitte resources involved).\nIntelligent Robotic Process Automation (“IRPA”) and SAP Build Process Automation and related emerging technologies.\nIntelligent Robotic Process Automation (RPA) and SAP Build accelerates the digital transformation of business processes by automatically replicating tedious actions that have no added value. RPA bots can be developed in attended and unattended mode."
+    },
+    {
+        "question": "Detailed Scope of Work",
+        "answer": "• Feasibility analysis & PoC creation.\n• Design Document of the Bot\n• Development of the Bot\n• Testing of the Bot\n• Support End User in User Acceptance Testing\n• Go-Live of the Bot\n• Hypercare of the Bot\n• Handover of Live Bots to Operations team\n• Enhancements in RPA Bots already developed\n• Support RPA Bot Solution Architecture\n• Provide Security & Compliance for RPA Bot developments\n• Enable Lifecycle Mgmt. Process and Service Mgmt. Processes\n• Support RPA Infrastructure Administration\n• Support Intelligent Use Case Repository App and Operations Development\n• Support DEV-IT Engagement with SAP Standard Development teams\n• Support Strategy, Change, Communications and Enablement for RPA\n• Development of RPA bots as per the SAP Demand\n• Support PO in the Kickoff meeting\n• Understanding of Business case\n• Support of Sunset of the Bot"
+    },
+    {
+        "question": "How many BOTs we have developed",
+        "answer": "63 live bots across LoBs and at present"
+    },
+    {
+        "question": "Name the LoBs we are working with",
+        "answer": "We have 6 LoBs team is working with. Please below the names:\n1. Customer Success\n2. Global Finance & Administration\n3. Office of the CEO\n4. People & Operations - HR\n5. Product Engineering\n6. Technology & Innovation"
+    },
+    {
+        "question": "Share example of the Bots",
+        "answer": "Zero Value Opportunity:\n• Sending notifications to Opportunity Owners to ensure zero-value opportunities are maintained properly within a given timeframe\n• Handover zero value opportunities back to marketing, sales development teams or another opportunity owner for re-engagement\n• Reduce Volume by 50%\n• Reduce Discontinuation Rate below 40%"
+    },
+    {
+        "question": "Share another example of the Bots",
+        "answer": "Automation of Digital Signature:\n• Implement a tool which can pick up all newly created invoices for the Indian CC.\n• Apply the digital signature from the CFO and submit the invoice through DocuSign\n• Saving of 1.5 - 2 FTE based on 30,000 invoices"
+    },
+    {
+        "question": "How many number of BOTs migrated",
+        "answer": "50 Bots Migrated from Intelligent RPA v2 to SAP Build Process Automation and remaining will be completed by end of Q1 2024"
+    },
+    {
+        "question": "How many Tools do we have in projects",
+        "answer": "Please find the Tool Lists:\n1. Intelligent Robotic Process Automation (RPA) / SAP Build\n2. JIRA for Project Management\n3. User Acceptance test executed using X-Ray\n4. Code Quality Checks using Checkmark\n5. Intelligent Use Case Repository for Bot Management"
+    },
+    {
+        "question": "Share Project Roadmap",
+        "answer": "Roadmap for Process Automation COE (RPA)\n1. Continuous Improvement: Development of new RPA Bots, RCA for frequently failed jobs\n2. Bot Development & Validation: 7 bots are in Q1 planning to go live and respectively for other quarters, Q2 – 13; Q3 – 6; Q4 – 3, Unplanned - 4\n3. Bot Monitoring & KPIs: Designing new KPIs all bots to calculate RPA Productivity\n4. Automations Initiatives: Integration of Forms and Workflows"
+    },
+    {
+        "question": "Share the Team Governance",
+        "answer": "Process Automation COE (RPA) has mainly 6 Team operating with Agile Ways of Working\n1. Core Team includes Product Manager, Service Lead Manager\n2. Infra Team responsible for administering and managing infrastructure systems like Handling severs and tenant management, including the provisioning, configuration, and maintenance etc.\n3. Development Team RPA Scrum Team\n4. App Development for Intelligent Use case Repository App\n5. L1 & L2 Support Team"
+    },
+    {
+        "question": "Share the Team Details",
+        "answer": "Please find the Team Details\n1. Service Delivery Lead - Hemanth M\n2. Infra Expert - Debraj Samarth\n3. RPA Scrum Team Members\n• Kotabagi Shruti\n• Koppoju Mahesh\n• Ray Sanjeet Kumar\n• Prity Kumari\n• Payal Srivastava\n4. App Development Team\n• Padarthi Kiran\n• Prakruthi S\n• Saddam Hussain\n5. L1 & L2 Support Team\n• K Kusuma Kumari\n• L Prabhavathi\n• Rajat Shukla\n• Sayyed Mudassir\n• Vemuru Monika\n• Poornima Pandey\n• Shaik Jilani Pasha\n• Jeevan Kumar T\n• Dey Ayan\n• Gousiya Shaik\n• Nagendrababu D\n• Srinithi Periasamy\n• Ramya Ashokan"
+    },
+    {
+        "question": "Share the Program Leads detail",
+        "answer": "Please find the Leads details as per Team\n1. Core Team Team Members - Hemanth M\n2. Infra Expert - Debraj Samarth\n3. RPA Scrum Team Members - Kotabagi Shruti\n4. App Development Lead - Padarthi Kiran\n5. L1 & L2 Support Team - K Kusuma Kumari"
+    },
+    {
+        "question": "Share Product Manager Responsibilities",
+        "answer": "Please find the high level responsibilities:\n• Sets direction for Program vision, strategy and roadmap\n• Ultimate decision authority for the program including scope\n• Main contact for Program Leads to provide guidance\n• Highest instance for escalation"
+    },
+    {
+        "question": "Share Service Delivery Manager Responsibilities",
+        "answer": "Please find the high level responsibilities:\n• Facilitate & define the program set up (scope, structure, timelines) together with Business Owners, Architects & Leadership Circle\n• Facilitate program decision making, drive cross-program alignment where needed, serve as escalation point\n• Establish Governance Framework & Program Operating Model\n• Mitigate issues raised by program members (project / Value Streams on scope, timeline, resource allocation topics)\n• Actively collaborate with functional / operational peers to drive stakeholder mgmt. transparency at all levels"
+    },
+    {
+        "question": "Share Team Leads Responsibilities",
+        "answer": "Please find the high level responsibilities:\n• Prepare for and participate in Planning and Inspect and Adapt events\n• Define the Sprint goals\n• Support Operations including: Service Requests and Incidents in Execution Backlog\n• Accepts stories by validating that the story meets acceptance criteria and that is complies with Definition of Done (DoD)\n• Responsible for user story creation and backlog prioritization with input from System Architect/Engineering and other stakeholders\n• Maintain and prioritize backlog items together with Business Owner and Business SMEs\n• Understands the scope of the upcoming work and collaborates with System and Solution Architects/Engineering to assist with decision-making\n• Support the Business Ready Assessment\n• Support the Business Go Live decision"
+    },
+    {
+        "question": "Share RPA Scrum Team Responsibilities",
+        "answer": "Please find the high level responsibilities:\n• Development of the Bot\n• Testing of the Bot\n• Support End User in User Acceptance Testing\n• Go-Live of the Bot\n• Hypercare of the Bot\n• Handover of Live Bots to Operations team\n• Enhancements in RPA Bots already developed\n• Development of RPA bots as per the SAP Demand\n• Understanding of Business case\n• Support of Sunset of the Bot"
+    },
+    {
+        "question": "Share App Development Team Responsibilities",
+        "answer": "Please find the high level responsibilities:\n• Development of the Intelligent Use case Repository App\n• Testing of the Intelligent Use case Repository App\n• Enhancements of App\n• Maintenance of App"
+    },
+    {
+        "question": "Share L1 & L2 Support Team Responsibilities",
+        "answer": "Please find the high level responsibilities:\n• 24*7 Support of IT tickets support\n• IRPA mail box monitoring\n• IRPA - MEC activity\n• Daily tickets Monitoring, Document Review, agile meeting\n• Documentation\n• Agent Upgradation\n• Outage Handling for HR Bots\n• Enhancement process for HR Bots\n• Enhancement and Resolving Bugs\n• Maintenance of Wiki\n• Outlook configuration\n• Consulting Tickets\n• Outage Handling\n• Roles and authorization\n• Password digital workers\n• Notifying L1 team if BOT is under Maintenance"
+    },
+    {
+        "question": "Share KPIs or Key Performance Indicators",
+        "answer": "KPIs for Process Automation COE (RPA)\nTeam Effectiveness:\n• Get It Right First Time: # of Reopened Tickets | Burn Down Chart | Defect Leakage\n• Knowledge Mgt.:# of ITSD Ticket Resolved | Training efforts\n• Productivity/ throughput: Velocity | Burnup / Burn Down\nProduct Quality:\n• Product Knowledge: Documentation – E2E Coverage | Quality check | Accessibility\n• Solution Performance: ATC Checks | Code inspector| CCAPPS | End-user feedback\n• Innovation: #of use cases/ applications| Business value | Technical debt\nPerformance Management\n• Team Satisfaction: Team feedback retrospective\n• User Satisfaction: TCO | User productivity"
+    },
+    {
+        "question": "Share Technical Training Topics for Project",
+        "answer": "Please find the below different type of trainings for the Project\n• SBPA Training\n• Agile training\n• SAP Build Apps"
+    },
+    {
+        "question": "Share details of SBPA Training",
+        "answer": "Training 1: Develop an end-to-end SAP Build Process Automation on Sales Order Management Process\n• Create a Project and a Business Process\n• Digitalize and Simplify User Interactions With Forms\n• Create a Form to Trigger the Business Process\n• Releasing, Deploying, Running and Monitoring Your Process\n• Boosting Business Processes with Automation\n• Using Conditions to Control the Flow\n• Improving the Process with Decision Logic\n• Getting Visibility Into Your Processes\n• See the Results with SAP Build Process Automation Customers\n\nTraining 2: Configuring SAP Build Process Automation Standard Package in to the S/4 HANA system - Vendor Onboarding Process\n• Explore the SAP BPA store\n• Configuring Live Process Destination\n• Add the standard package to the BPA Lobby\n• Configuring Cloud Connector\n• Creating a destination to connect to the S/4 HANA server\n• Create a SMTP server\n• Testing the SMTP server email trigger\n• Configure SAP BPA Destination configuration\n• Activate the SAP standard build process\n• Review the workflow details and activate it\n• Understand the business rules\n• Configure workflow approvers\n• Create a Launchpad site in the Workzone\n• Configure the standard Fiori applications in the Workzone Site\n• Trigger the Vendor onboarding process from the Fiori App and test the process."
+    },
+    {
+        "question": "Share details of SAP Build Apps Training",
+        "answer": "• Create an application from scratch\n• Understanding the screen design process\n• Overview of UI components\n• Connecting to REST API\n• Connecting to OData service\n• Exploring the authentication technique\n• Understanding Offline feature\n• Build & Distribute the app"
+    },
+    {
+        "question": "Share Agile Delivery Ceremonies and Cadences",
+        "answer": "Please find the details of Ceremonies and Cadences:\n• Daily meeting: Understanding progress for -1 Day, Today, & Blockers\n• Program Planning: Reviewing all User Stories – in Overdue, In-progress, & discussing blockers & due dates\n• Backlog Refinement: Refining the user stories\n• Core Team Sync: RAID Log Discussion across value streams & reviewing blockers"
+    }
+]
