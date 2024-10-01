@@ -60,6 +60,7 @@ jobs:
             echo "$files" | jq -r '.[]' | while IFS= read -r FILE_PATH; do
               FILE_PATH="${FILE_PATH#./}"  # Remove leading './'
               if [[ "$FILE_PATH" != */main.yml && "$FILE_PATH" != "" ]]; then  # Skip any path ending with main.yml and empty paths
+                INDEX_NAME = $(echo $FILE_PATH | awk -F'/' '{print $1})
                 URL="https://raw.githubusercontent.com/$GITHUB_REPOSITORY/main/$FILE_PATH"
                 echo "File: \"$FILE_PATH\""
                 echo "Operation: $operation"
