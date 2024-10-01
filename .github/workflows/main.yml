@@ -65,7 +65,7 @@ jobs:
                 echo "File: \"$FILE_PATH\""
                 echo "Operation: $operation"
                 echo "URL: $URL"
-                RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"'"$operation"'", "index_name": "'"$INDEX_NAME"'"}' https://rag-api.cfapps.eu10-004.hana.ondemand.com/create_doc_embedding/)
+                RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"'"$operation"'", "index_name": "'"$INDEX_NAME"'", "role" : "'"everyone"'"}' https://rag-api.cfapps.eu10-004.hana.ondemand.com/create_doc_embedding/)
                 echo "API Response: $RESPONSE"
               else
                 echo "Skipping file: \"$FILE_PATH\""
