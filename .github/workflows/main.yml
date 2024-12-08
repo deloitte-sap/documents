@@ -65,7 +65,19 @@ jobs:
                 echo "File: \"$FILE_PATH\""
                 echo "Operation: $operation"
                 echo "URL: $URL"
-                RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"'"$operation"'", "index_name": "'"$INDEX_NAME"'", "role" : "'"everyone"'"}' https://rag-api.cfapps.eu10-004.hana.ondemand.com/create_doc_embedding/)
+                # Define the role as everyone initially
+                ROLE="everyone"
+                TXT_FILE_PATH="${FILE_PATH%.txt}.txt"
+                echo "Checking for corresponding TXT file: $TXT_FILE_PATH"
+                if curl --silent --head --fail "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/main/$TXT_FILE_PATH"; then
+                  echo "TXT file exists, processing emails."
+                  EMAILS=$(curl -s "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/main/$TXT_FILE_PATH")
+                  # Extract emails from the .txt file and convert them into a comma-separated list
+                  ROLE=$(echo "$EMAILS" | tr '\n' ',' | sed 's/,$//')
+                else
+                  echo "No TXT file found for this document. Using default role: everyone"
+                fi
+                RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"'"$operation"'", "index_name": "'"$INDEX_NAME"'", "role" : "'"$ROLE"'"}' https://rag-api.cfapps.eu10-004.hana.ondemand.com/create_doc_embedding/)
                 echo "API Response: $RESPONSE"
               else
                 echo "Skipping file: \"$FILE_PATH\""
