@@ -61,21 +61,46 @@ jobs:
               FILE_PATH="${FILE_PATH#./}"  # Remove leading './'
               if [[ "$FILE_PATH" != */main.yml && "$FILE_PATH" != "" ]]; then  # Skip any path ending with main.yml and empty paths
                 INDEX_NAME=$(echo "$FILE_PATH" | awk -F'/' '{print $1}')
-                URL="https://raw.githubusercontent.com/$GITHUB_REPOSITORY/main/$FILE_PATH"
-                echo "File: \"$FILE_PATH\""
-                echo "Operation: $operation"
-                echo "URL: $URL"
-                # Define the role as everyone initially
-                ROLE="everyone"
-                TXT_FILE_PATH="${FILE_PATH%.txt}.txt"
-                echo "Checking for corresponding TXT file: $TXT_FILE_PATH"
-                if curl --silent --head --fail "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/main/$TXT_FILE_PATH"; then
-                  echo "TXT file exists, processing emails."
-                  EMAILS=$(curl -s "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/main/$TXT_FILE_PATH")
-                  # Extract emails from the .txt file and convert them into a comma-separated list
-                  ROLE=$(echo "$EMAILS" | tr '\n' ',' | sed 's/,$//')
+                if [[ "$FILE_PATH" == *.txt ]]; then
+                  BASE_FILE="${FILE_PATH%.txt}"
+                  FOUND_FILE=false
+                  for EXT in "pdf" "docx" "md" "csv"; do  # Add more extensions as needed
+                    CORRESPONDING_FILE="${BASE_FILE}.${EXT}"
+                    CORRESPONDING_FILE_URL="https://raw.githubusercontent.com/$GITHUB_REPOSITORY/main/$CORRESPONDING_FILE"
+                    if curl --silent --head --fail "$CORRESPONDING_FILE_URL"; then
+                      # File exists, update the URL and role assignment
+                      FILE_PATH="$CORRESPONDING_FILE"
+                      URL="$CORRESPONDING_FILE_URL"
+                      FOUND_FILE=true
+                      break
+                    fi
+                  done
+                  if ! $FOUND_FILE; then
+                    echo "No corresponding file found for $FILE_PATH. Skipping..."
+                    continue  # Skip this iteration if no corresponding file is found
+                  fi
+                  
+                  echo "Corresponding file found. URL is: $URL"
+                  ROLE="everyone"
+            
+                  # Now check for the TXT file for emails
+                  TXT_FILE_PATH="${BASE_FILE}.txt"  # Create the corresponding TXT file path
+                  echo "Checking for corresponding TXT file: $TXT_FILE_PATH"
+                  if curl --silent --head --fail "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/main/$TXT_FILE_PATH"; then
+                    echo "TXT file exists, processing emails."
+                    EMAILS=$(curl -s "https://raw.githubusercontent.com/$GITHUB_REPOSITORY/main/$TXT_FILE_PATH")
+                    # Extract emails and convert to comma-separated list
+                    ROLE=$(echo "$EMAILS" | tr '\n' ',' | sed 's/,$//')
+                    echo "Role assigned: $ROLE"
+                  else
+                    echo "No TXT file found for this document. Using default role: everyone"
+                  fi
                 else
-                  echo "No TXT file found for this document. Using default role: everyone"
+                  # If it's not a .txt file, just use the original URL
+                  URL="https://raw.githubusercontent.com/$GITHUB_REPOSITORY/main/$FILE_PATH"
+                  ROLE="everyone"  # Default role if no TXT file
+                  echo "File: \"$FILE_PATH\""
+                  echo "URL: $URL"
                 fi
                 RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d '{"url":"'"$URL"'","operation":"'"$operation"'", "index_name": "'"$INDEX_NAME"'", "role" : "'"$ROLE"'"}' https://rag-api.cfapps.eu10-004.hana.ondemand.com/create_doc_embedding/)
                 echo "API Response: $RESPONSE"
